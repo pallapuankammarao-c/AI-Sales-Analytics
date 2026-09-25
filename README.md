@@ -268,8 +268,8 @@ Documented in `powerbi/README.md` and `powerbi/dashboard_design.md`:
 
 ### Step 1: Clone Repository & Create Virtual Environment
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
-cd AI_Data_Analyst_Agent
+git clone https://github.com/pallapuankammarao-c/AI-Sales-Analytics.git
+cd AI-Sales-Analytics
 
 # Create and activate virtual environment
 python -m venv venv
@@ -324,6 +324,6 @@ python tests/test_project_validation.py
 
 ## 19. Author & Portfolio Contact
 
-- **Candidate:** Fresher Data Analyst & Analytics Engineer
-- **Project Repository:** [AI-Powered Sales & Customer Analytics System](https://github.com/YOUR_USERNAME/AI-Sales-Analytics)
+- **Candidate:** Pallapu Ankamma Rao ([@pallapuankammarao-c](https://github.com/pallapuankammarao-c))
+- **Project Repository:** [AI-Powered Sales & Customer Analytics System](https://github.com/pallapuankammarao-c/AI-Sales-Analytics)
 - **Comprehensive Interview Cheat Sheet:** See [`INTERVIEW_GUIDE.md`](INTERVIEW_GUIDE.md) for 60-second pitches, architectural rationales, and 20 interviewer Q&A.
