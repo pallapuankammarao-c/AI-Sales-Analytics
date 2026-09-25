@@ -1,4 +1,34 @@
-<!DOCTYPE html>
+"""
+AI-Powered Sales & Customer Analytics System
+Module: build_dashboard_html.py
+Purpose: Compiles a 100% self-contained, bulletproof executive analytics dashboard
+         into index.html and dashboard/index.html with:
+         - Embedded inline DASHBOARD_DATA (zero external file dependency)
+         - Local + CDN Chart.js loading
+         - High-res native HTML5 Canvas fallback if Chart.js is offline/blocked
+         - Modern dark-mode styling with zero linter warnings
+"""
+
+import os
+import json
+
+def build_dashboard():
+    # 1. Load data from dashboard/data.js
+    data_path = "dashboard/data.js"
+    if not os.path.exists(data_path):
+        raise FileNotFoundError(f"Missing {data_path}. Run export_dashboard_data.py first.")
+
+    with open(data_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Extract JSON object from 'window.DASHBOARD_DATA = { ... };'
+    json_start = content.find("{")
+    json_end = content.rfind("}") + 1
+    raw_json = content[json_start:json_end]
+    data_obj = json.loads(raw_json)
+
+    # 2. Construct the full HTML
+    html_template = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -20,7 +50,7 @@
     /* ==========================================================================
        DESIGN SYSTEM & CSS TOKENS
        ========================================================================== */
-    :root {
+    :root {{
       --bg-dark: #080c14;
       --bg-surface: #0f172a;
       --bg-card: rgba(17, 24, 39, 0.75);
@@ -55,15 +85,15 @@
 
       --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-    }
+    }}
 
-    * {
+    * {{
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
+    }}
 
-    body {
+    body {{
       background-color: var(--bg-dark);
       background-image: 
         radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
@@ -76,33 +106,33 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-    }
+    }}
 
     /* Custom Scrollbar */
-    ::-webkit-scrollbar {
+    ::-webkit-scrollbar {{
       width: 8px;
       height: 8px;
-    }
-    ::-webkit-scrollbar-track {
+    }}
+    ::-webkit-scrollbar-track {{
       background: var(--bg-dark);
-    }
-    ::-webkit-scrollbar-thumb {
+    }}
+    ::-webkit-scrollbar-thumb {{
       background: #1e293b;
       border-radius: var(--radius-full);
-    }
-    ::-webkit-scrollbar-thumb:hover {
+    }}
+    ::-webkit-scrollbar-thumb:hover {{
       background: #334155;
-    }
+    }}
 
     /* Container */
-    .app-container {
+    .app-container {{
       max-width: 1440px;
       margin: 0 auto;
       padding: 24px;
-    }
+    }}
 
     /* Header */
-    .top-header {
+    .top-header {{
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -117,15 +147,15 @@
       position: sticky;
       top: 16px;
       z-index: 100;
-    }
+    }}
 
-    .brand-section {
+    .brand-section {{
       display: flex;
       align-items: center;
       gap: 16px;
-    }
+    }}
 
-    .brand-logo {
+    .brand-logo {{
       width: 44px;
       height: 44px;
       background: var(--grad-primary);
@@ -134,14 +164,14 @@
       align-items: center;
       justify-content: center;
       box-shadow: var(--shadow-glow);
-    }
-    .brand-logo svg {
+    }}
+    .brand-logo svg {{
       width: 24px;
       height: 24px;
       color: #fff;
-    }
+    }}
 
-    .brand-text h1 {
+    .brand-text h1 {{
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.02em;
@@ -149,20 +179,20 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }
-    .brand-text p {
+    }}
+    .brand-text p {{
       font-size: 0.78rem;
       color: var(--text-muted);
       font-weight: 500;
-    }
+    }}
 
-    .header-actions {
+    .header-actions {{
       display: flex;
       align-items: center;
       gap: 12px;
-    }
+    }}
 
-    .badge-status {
+    .badge-status {{
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -174,23 +204,23 @@
       color: var(--accent-emerald);
       font-weight: 600;
       letter-spacing: 0.02em;
-    }
-    .badge-status .pulse-dot {
+    }}
+    .badge-status .pulse-dot {{
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--accent-emerald);
       box-shadow: 0 0 10px var(--accent-emerald);
       animation: pulse 2s infinite;
-    }
+    }}
 
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1); }
-    }
+    @keyframes pulse {{
+      0% {{ opacity: 1; transform: scale(1); }}
+      50% {{ opacity: 0.4; transform: scale(0.85); }}
+      100% {{ opacity: 1; transform: scale(1); }}
+    }}
 
-    .btn-action {
+    .btn-action {{
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -204,24 +234,24 @@
       text-decoration: none;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-action:hover {
+    }}
+    .btn-action:hover {{
       background: rgba(255, 255, 255, 0.1);
       border-color: var(--border-focus);
       transform: translateY(-1px);
-    }
-    .btn-primary {
+    }}
+    .btn-primary {{
       background: var(--grad-primary);
       border: none;
       color: #fff;
       box-shadow: var(--shadow-sm);
-    }
-    .btn-primary:hover {
+    }}
+    .btn-primary:hover {{
       box-shadow: var(--shadow-glow);
-    }
+    }}
 
     /* Tab Bar */
-    .tab-bar {
+    .tab-bar {{
       display: flex;
       gap: 8px;
       padding: 6px;
@@ -231,8 +261,8 @@
       border-radius: var(--radius-md);
       margin-bottom: 24px;
       overflow-x: auto;
-    }
-    .tab-btn {
+    }}
+    .tab-btn {{
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -247,43 +277,43 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.2s ease;
-    }
-    .tab-btn:hover {
+    }}
+    .tab-btn:hover {{
       color: var(--text-main);
       background: rgba(255, 255, 255, 0.04);
-    }
-    .tab-btn.active {
+    }}
+    .tab-btn.active {{
       color: #fff;
       background: var(--bg-surface);
       border: 1px solid rgba(99, 102, 241, 0.4);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-    .tab-btn svg {
+    }}
+    .tab-btn svg {{
       width: 16px;
       height: 16px;
-    }
+    }}
 
-    .tab-pane {
+    .tab-pane {{
       display: none;
       animation: fadeIn 0.3s ease;
-    }
-    .tab-pane.active {
+    }}
+    .tab-pane.active {{
       display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    }}
+    @keyframes fadeIn {{
+      from {{ opacity: 0; transform: translateY(6px); }}
+      to {{ opacity: 1; transform: translateY(0); }}
+    }}
 
     /* KPI Grid */
-    .kpi-grid {
+    .kpi-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
-    }
+    }}
 
-    .kpi-card {
+    .kpi-card {{
       background: var(--bg-card);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
@@ -293,13 +323,13 @@
       overflow: hidden;
       transition: all 0.25s ease;
       box-shadow: var(--shadow-sm);
-    }
-    .kpi-card:hover {
+    }}
+    .kpi-card:hover {{
       transform: translateY(-3px);
       border-color: rgba(99, 102, 241, 0.4);
       box-shadow: var(--shadow-md);
-    }
-    .kpi-card::before {
+    }}
+    .kpi-card::before {{
       content: '';
       position: absolute;
       top: 0;
@@ -307,26 +337,26 @@
       right: 0;
       height: 3px;
       background: var(--accent-indigo);
-    }
-    .kpi-card.cyan::before { background: var(--accent-cyan); }
-    .kpi-card.emerald::before { background: var(--accent-emerald); }
-    .kpi-card.amber::before { background: var(--accent-amber); }
-    .kpi-card.rose::before { background: var(--accent-rose); }
+    }}
+    .kpi-card.cyan::before {{ background: var(--accent-cyan); }}
+    .kpi-card.emerald::before {{ background: var(--accent-emerald); }}
+    .kpi-card.amber::before {{ background: var(--accent-amber); }}
+    .kpi-card.rose::before {{ background: var(--accent-rose); }}
 
-    .kpi-header {
+    .kpi-header {{
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-    }
-    .kpi-title {
+    }}
+    .kpi-title {{
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-    }
-    .kpi-icon {
+    }}
+    .kpi-icon {{
       width: 32px;
       height: 32px;
       border-radius: var(--radius-sm);
@@ -335,63 +365,63 @@
       justify-content: center;
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-main);
-    }
-    .kpi-value {
+    }}
+    .kpi-value {{
       font-size: 1.85rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       margin-bottom: 6px;
       font-family: var(--font-sans);
-    }
-    .kpi-meta {
+    }}
+    .kpi-meta {{
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 0.78rem;
       color: var(--text-dim);
-    }
-    .kpi-pill {
+    }}
+    .kpi-pill {{
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
       border-radius: var(--radius-full);
       font-size: 0.72rem;
       font-weight: 700;
-    }
-    .kpi-pill.up {
+    }}
+    .kpi-pill.up {{
       background: rgba(16, 185, 129, 0.15);
       color: var(--accent-emerald);
-    }
-    .kpi-pill.warn {
+    }}
+    .kpi-pill.warn {{
       background: rgba(245, 158, 11, 0.15);
       color: var(--accent-amber);
-    }
-    .kpi-pill.danger {
+    }}
+    .kpi-pill.danger {{
       background: rgba(244, 63, 94, 0.15);
       color: var(--accent-rose);
-    }
+    }}
 
     /* Section Grids */
-    .dashboard-grid-2 {
+    .dashboard-grid-2 {{
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 20px;
       margin-bottom: 24px;
-    }
-    .dashboard-grid-equal {
+    }}
+    .dashboard-grid-equal {{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
       margin-bottom: 24px;
-    }
+    }}
 
-    @media (max-width: 1024px) {
-      .dashboard-grid-2, .dashboard-grid-equal {
+    @media (max-width: 1024px) {{
+      .dashboard-grid-2, .dashboard-grid-equal {{
         grid-template-columns: 1fr;
-      }
-    }
+      }}
+    }}
 
-    .content-card {
+    .content-card {{
       background: var(--bg-card);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border-subtle);
@@ -399,42 +429,42 @@
       padding: 22px;
       box-shadow: var(--shadow-sm);
       position: relative;
-    }
-    .card-header-bar {
+    }}
+    .card-header-bar {{
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
-    }
-    .card-header-bar h2, .card-header-bar h3 {
+    }}
+    .card-header-bar h2, .card-header-bar h3 {{
       font-size: 1.05rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
-    }
-    .card-subtitle {
+    }}
+    .card-subtitle {{
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
-    }
+    }}
 
     /* Chart Containers */
-    .chart-box {
+    .chart-box {{
       position: relative;
       width: 100%;
       height: 320px;
-    }
-    .chart-box-sm {
+    }}
+    .chart-box-sm {{
       position: relative;
       width: 100%;
       height: 260px;
-    }
+    }}
 
     /* GenAI Insight Cards */
-    .insight-card {
+    .insight-card {{
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
@@ -443,27 +473,27 @@
       transition: all 0.2s ease;
       position: relative;
       overflow: hidden;
-    }
-    .insight-card:hover {
+    }}
+    .insight-card:hover {{
       border-color: rgba(99, 102, 241, 0.4);
       box-shadow: var(--shadow-md);
-    }
-    .insight-card.critical { border-left: 4px solid var(--accent-rose); }
-    .insight-card.high { border-left: 4px solid var(--accent-amber); }
-    .insight-card.warning { border-left: 4px solid var(--accent-cyan); }
+    }}
+    .insight-card.critical {{ border-left: 4px solid var(--accent-rose); }}
+    .insight-card.high {{ border-left: 4px solid var(--accent-amber); }}
+    .insight-card.warning {{ border-left: 4px solid var(--accent-cyan); }}
 
-    .insight-header {
+    .insight-header {{
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 16px;
-    }
-    .insight-title-group h3 {
+    }}
+    .insight-title-group h3 {{
       font-size: 1.15rem;
       font-weight: 700;
       color: #fff;
-    }
-    .insight-tag {
+    }}
+    .insight-tag {{
       display: inline-block;
       font-size: 0.72rem;
       font-weight: 600;
@@ -471,22 +501,22 @@
       letter-spacing: 0.05em;
       color: var(--accent-cyan);
       margin-top: 4px;
-    }
+    }}
 
-    .triad-grid {
+    .triad-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 12px;
       margin-top: 14px;
-    }
-    .triad-box {
+    }}
+    .triad-box {{
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       padding: 14px;
       font-size: 0.82rem;
-    }
-    .triad-label {
+    }}
+    .triad-label {{
       font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.06em;
@@ -495,24 +525,24 @@
       display: flex;
       align-items: center;
       gap: 6px;
-    }
-    .triad-box.fact .triad-label { color: var(--accent-cyan); }
-    .triad-box.explanation .triad-label { color: var(--accent-amber); }
-    .triad-box.investigation .triad-label { color: var(--accent-purple); }
-    .triad-box.action .triad-label { color: var(--accent-emerald); }
+    }}
+    .triad-box.fact .triad-label {{ color: var(--accent-cyan); }}
+    .triad-box.explanation .triad-label {{ color: var(--accent-amber); }}
+    .triad-box.investigation .triad-label {{ color: var(--accent-purple); }}
+    .triad-box.action .triad-label {{ color: var(--accent-emerald); }}
 
     /* Data Tables */
-    .table-responsive {
+    .table-responsive {{
       width: 100%;
       overflow-x: auto;
-    }
-    .data-table {
+    }}
+    .data-table {{
       width: 100%;
       border-collapse: collapse;
       font-size: 0.83rem;
       text-align: left;
-    }
-    .data-table th {
+    }}
+    .data-table th {{
       background: rgba(15, 23, 42, 0.9);
       padding: 12px 14px;
       font-weight: 700;
@@ -521,33 +551,33 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       font-size: 0.72rem;
-    }
-    .data-table td {
+    }}
+    .data-table td {{
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       color: var(--text-main);
-    }
-    .data-table tr:hover td {
+    }}
+    .data-table tr:hover td {{
       background: rgba(255, 255, 255, 0.02);
-    }
-    .code-chip {
+    }}
+    .code-chip {{
       font-family: var(--font-mono);
       font-size: 0.78rem;
       padding: 2px 6px;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 4px;
       color: var(--accent-cyan);
-    }
+    }}
 
-    .filter-bar {
+    .filter-bar {{
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
-    }
-    .search-input {
+    }}
+    .search-input {{
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
@@ -557,84 +587,84 @@
       font-family: inherit;
       min-width: 260px;
       transition: border-color 0.2s;
-    }
-    .search-input:focus {
+    }}
+    .search-input:focus {{
       outline: none;
       border-color: var(--accent-indigo);
-    }
+    }}
 
     /* Models Grid */
-    .model-comparison-grid {
+    .model-comparison-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
       margin-bottom: 20px;
-    }
-    .model-card {
+    }}
+    .model-card {{
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       padding: 18px;
       transition: all 0.2s ease;
-    }
-    .model-card.featured {
+    }}
+    .model-card.featured {{
       border: 1px solid rgba(99, 102, 241, 0.6);
       background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);
       box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
-    }
-    .model-title {
+    }}
+    .model-title {{
       font-size: 1rem;
       font-weight: 700;
       margin-bottom: 4px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-    .model-metrics {
+    }}
+    .model-metrics {{
       display: flex;
       gap: 14px;
       margin: 12px 0;
       padding: 10px 0;
       border-top: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
-    }
-    .metric-item {
+    }}
+    .metric-item {{
       flex: 1;
-    }
-    .metric-item .label {
+    }}
+    .metric-item .label {{
       font-size: 0.7rem;
       color: var(--text-dim);
       text-transform: uppercase;
-    }
-    .metric-item .val {
+    }}
+    .metric-item .val {{
       font-size: 1.15rem;
       font-weight: 700;
       font-family: var(--font-mono);
       color: var(--accent-cyan);
-    }
+    }}
 
-    .feature-bar-wrap {
+    .feature-bar-wrap {{
       margin-bottom: 10px;
-    }
-    .feature-bar-label {
+    }}
+    .feature-bar-label {{
       display: flex;
       justify-content: space-between;
       font-size: 0.78rem;
       margin-bottom: 4px;
-    }
-    .progress-track {
+    }}
+    .progress-track {{
       background: rgba(255, 255, 255, 0.06);
       border-radius: var(--radius-full);
       height: 6px;
       overflow: hidden;
-    }
-    .progress-fill {
+    }}
+    .progress-fill {{
       height: 100%;
       background: var(--grad-primary);
       border-radius: var(--radius-full);
-    }
+    }}
 
-    .check-item {
+    .check-item {{
       display: flex;
       align-items: flex-start;
       gap: 12px;
@@ -643,61 +673,61 @@
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       margin-bottom: 8px;
-    }
-    .check-icon {
+    }}
+    .check-icon {{
       color: var(--accent-emerald);
       font-size: 1.1rem;
       line-height: 1;
-    }
-    .check-content strong {
+    }}
+    .check-content strong {{
       font-size: 0.85rem;
       color: #fff;
-    }
-    .check-content p {
+    }}
+    .check-content p {{
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-top: 2px;
-    }
+    }}
 
-    .gallery-grid {
+    .gallery-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
-    }
-    .gallery-item {
+    }}
+    .gallery-item {{
       background: rgba(15, 23, 42, 0.7);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
       transition: all 0.25s ease;
-    }
-    .gallery-item:hover {
+    }}
+    .gallery-item:hover {{
       transform: translateY(-4px);
       border-color: var(--accent-cyan);
       box-shadow: var(--shadow-md);
-    }
-    .gallery-item img {
+    }}
+    .gallery-item img {{
       width: 100%;
       height: 160px;
       object-fit: cover;
       display: block;
       border-bottom: 1px solid var(--border-subtle);
-    }
-    .gallery-item-caption {
+    }}
+    .gallery-item-caption {{
       padding: 12px;
-    }
-    .gallery-item-caption h4 {
+    }}
+    .gallery-item-caption h4 {{
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-main);
-    }
-    .gallery-item-caption p {
+    }}
+    .gallery-item-caption p {{
       font-size: 0.72rem;
       color: var(--text-dim);
-    }
+    }}
 
-    .modal-backdrop {
+    .modal-backdrop {{
       display: none;
       position: fixed;
       top: 0;
@@ -710,11 +740,11 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
-    }
-    .modal-backdrop.open {
+    }}
+    .modal-backdrop.open {{
       display: flex;
-    }
-    .modal-box {
+    }}
+    .modal-box {{
       max-width: 900px;
       width: 100%;
       background: var(--bg-surface);
@@ -723,21 +753,21 @@
       overflow: hidden;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
       position: relative;
-    }
-    .modal-box img {
+    }}
+    .modal-box img {{
       width: 100%;
       max-height: 70vh;
       object-fit: contain;
       background: #000;
-    }
-    .modal-footer {
+    }}
+    .modal-footer {{
       padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: var(--bg-card);
-    }
-    .btn-close-modal {
+    }}
+    .btn-close-modal {{
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #fff;
@@ -746,9 +776,9 @@
       cursor: pointer;
       font-family: inherit;
       font-weight: 600;
-    }
+    }}
 
-    .app-footer {
+    .app-footer {{
       margin-top: 48px;
       padding: 24px 0;
       border-top: 1px solid var(--border-subtle);
@@ -759,19 +789,19 @@
       font-size: 0.8rem;
       flex-wrap: wrap;
       gap: 16px;
-    }
-    .footer-links {
+    }}
+    .footer-links {{
       display: flex;
       gap: 16px;
-    }
-    .footer-links a {
+    }}
+    .footer-links a {{
       color: var(--text-muted);
       text-decoration: none;
       transition: color 0.2s;
-    }
-    .footer-links a:hover {
+    }}
+    .footer-links a:hover {{
       color: var(--accent-cyan);
-    }
+    }}
   </style>
 </head>
 <body>
@@ -1242,7 +1272,7 @@
        EMBEDDED INLINE DATASET (ZERO DEPENDENCY / ZERO NETWORK REQUIREMENT)
        ======================================================================== -->
   <script id="embedded-data">
-    window.DASHBOARD_DATA = {"kpis": {"total_sales": 2961669.95, "total_profit": 423672.35, "margin": 14.305184478776914, "total_orders": 5486, "total_qty": 12219, "aov": 539.8596336128327, "avg_discount": 9.735690849434926, "total_customers": 642}, "monthly": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12"], "sales": [78161.95, 88458.5, 82307.05, 108087.3, 114377.6, 81361.95, 89691.75, 92784.6, 107982.5, 98467.5, 293443.2, 275009.05, 88062.4, 92946.9, 108955.8, 79743.4, 74218.9, 99767.25, 102259.8, 99050.5, 63254.25, 87823.95, 289078.75, 266375.1], "profit": [11281.95, 12325.5, 7607.05, 17548.3, 15169.6, 12556.95, 14058.75, 15730.6, 15724.5, 13194.9, 39773.2, 40523.05, 12803.4, 13122.9, 17293.8, 11108.4, 10404.9, 14729.25, 14895.8, 14151.5, 5909.25, 9321.95, 44694.75, 39742.1], "orders": [176, 171, 151, 207, 191, 158, 166, 186, 181, 170, 509, 498, 153, 163, 193, 158, 175, 153, 187, 169, 156, 174, 513, 528]}, "regional": {"labels": ["North", "East", "South", "West", "Central"], "sales": [885892.95, 666463.9, 536556.6, 525522.85, 347233.65], "profit": [121270.95, 99733.9, 75266.0, 75324.85, 52076.65], "margin": [13.69, 14.96, 14.03, 14.33, 15.0], "orders": [1640, 1199, 1029, 998, 620], "customers": [299, 287, 275, 270, 194]}, "category": {"labels": ["Furniture", "Office Supplies", "Technology"], "sales": [1110094.0, 110774.7, 1740801.25], "profit": [-27331.0, 43326.1, 407677.25], "margin": [-2.46, 39.11, 23.42]}, "payment": {"labels": ["Credit Card", "UPI", "Debit Card", "Net Banking", "Cash on Delivery"], "counts": [2156, 1328, 1116, 505, 381]}, "top_products": [{"id": "TEC-LP-1002", "category": "Technology", "sales": 675420.0, "profit": 132720.0, "margin": 19.65, "units": 603}, {"id": "TEC-PH-1001", "category": "Technology", "sales": 581357.5, "profit": 149357.5, "margin": 25.69, "units": 720}, {"id": "FUR-SF-2005", "category": "Furniture", "sales": 413725.0, "profit": -16665.0, "margin": -4.03, "units": 757}, {"id": "FUR-TB-2002", "category": "Furniture", "sales": 274545.0, "profit": -18735.0, "margin": -6.82, "units": 752}, {"id": "TEC-MN-1003", "category": "Technology", "sales": 218055.0, "profit": 56775.0, "margin": 26.04, "units": 768}, {"id": "FUR-DS-2004", "category": "Furniture", "sales": 173952.0, "profit": -2328.0, "margin": -1.34, "units": 678}, {"id": "TEC-PR-1005", "category": "Technology", "sales": 170387.5, "profit": 33207.5, "margin": 19.49, "units": 722}, {"id": "FUR-BK-2003", "category": "Furniture", "sales": 129756.0, "profit": 3581.0, "margin": 2.76, "units": 721}, {"id": "FUR-CH-2001", "category": "Furniture", "sales": 118116.0, "profit": 6816.0, "margin": 5.77, "units": 795}, {"id": "TEC-HD-1006", "category": "Technology", "sales": 70185.5, "profit": 23355.5, "margin": 33.28, "units": 669}], "bottom_products": [{"id": "FUR-TB-2002", "category": "Furniture", "sales": 274545.0, "profit": -18735.0, "margin": -6.82, "units": 752}, {"id": "FUR-SF-2005", "category": "Furniture", "sales": 413725.0, "profit": -16665.0, "margin": -4.03, "units": 757}, {"id": "FUR-DS-2004", "category": "Furniture", "sales": 173952.0, "profit": -2328.0, "margin": -1.34, "units": 678}, {"id": "OFF-EN-3005", "category": "Office Supplies", "sales": 5434.8, "profit": 3247.8, "margin": 59.76, "units": 729}, {"id": "FUR-BK-2003", "category": "Furniture", "sales": 129756.0, "profit": 3581.0, "margin": 2.76, "units": 721}, {"id": "OFF-LA-3006", "category": "Office Supplies", "sales": 10102.5, "profit": 5041.5, "margin": 49.9, "units": 723}, {"id": "OFF-BI-3002", "category": "Office Supplies", "sales": 10316.4, "profit": 5229.8, "margin": 50.69, "units": 833}, {"id": "OFF-PA-3001", "category": "Office Supplies", "sales": 11925.0, "profit": 5535.0, "margin": 46.42, "units": 710}, {"id": "FUR-CH-2001", "category": "Furniture", "sales": 118116.0, "profit": 6816.0, "margin": 5.77, "units": 795}, {"id": "OFF-ST-3003", "category": "Office Supplies", "sales": 17461.25, "profit": 7017.25, "margin": 40.19, "units": 746}], "discount_sensitivity": {"labels": ["0-5%", "6-15%", "16-25%", "26-35%", ">35%"], "avg_profit": [134.29, 91.76, -8.21, -87.86, -206.23], "total_profit": [410264.65, 101211.0, -6103.5, -28905.8, -52794.0], "orders": [3055, 1103, 743, 329, 256], "loss_rate": [0.1, 0.0, 37.0, 72.3, 100.0]}, "customer_segments": {"labels": ["Regular", "High Value", "Dormant / Low Engagement", "At Risk", "New"], "counts": [342, 156, 97, 41, 6], "spend": [905921.9, 1759095.95, 107594.1, 188549.2, 508.8], "avg_recency": [36.9, 17.9, 280.3, 215.7, 24.3]}, "at_risk_customers": [{"id": "CUST-0149", "type": "Corporate", "region": "Central", "orders": 3, "spend": 15789.0, "profit": 289.0, "days_inactive": 212, "action": "Immediate VIP Call"}, {"id": "CUST-0062", "type": "Small Business", "region": "North", "orders": 9, "spend": 13356.35, "profit": 2584.35, "days_inactive": 202, "action": "Immediate VIP Call"}, {"id": "CUST-0427", "type": "Consumer", "region": "East", "orders": 8, "spend": 9208.5, "profit": -777.5, "days_inactive": 133, "action": "Immediate VIP Call"}, {"id": "CUST-0509", "type": "Consumer", "region": "North", "orders": 8, "spend": 8866.5, "profit": 1574.5, "days_inactive": 366, "action": "Immediate VIP Call"}, {"id": "CUST-0008", "type": "Consumer", "region": "South", "orders": 7, "spend": 8135.0, "profit": 1981.0, "days_inactive": 163, "action": "Immediate VIP Call"}, {"id": "CUST-0627", "type": "Consumer", "region": "East", "orders": 7, "spend": 6258.0, "profit": 514.0, "days_inactive": 136, "action": "Immediate VIP Call"}, {"id": "CUST-0233", "type": "Consumer", "region": "East", "orders": 7, "spend": 5783.0, "profit": 1093.0, "days_inactive": 367, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0384", "type": "Small Business", "region": "West", "orders": 2, "spend": 5400.0, "profit": 1380.0, "days_inactive": 134, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0099", "type": "Consumer", "region": "East", "orders": 6, "spend": 5365.5, "profit": 867.5, "days_inactive": 225, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0544", "type": "Consumer", "region": "West", "orders": 6, "spend": 5136.0, "profit": 1113.0, "days_inactive": 376, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0310", "type": "Corporate", "region": "Central", "orders": 4, "spend": 5115.0, "profit": -409.0, "days_inactive": 183, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0250", "type": "Corporate", "region": "Central", "orders": 4, "spend": 5102.5, "profit": 1205.5, "days_inactive": 389, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0351", "type": "Small Business", "region": "East", "orders": 5, "spend": 5089.25, "profit": 662.25, "days_inactive": 220, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0362", "type": "Small Business", "region": "Central", "orders": 4, "spend": 4745.55, "profit": 1113.55, "days_inactive": 237, "action": "Automated 15% Win-Back Email"}, {"id": "CUST-0322", "type": "Consumer", "region": "South", "orders": 6, "spend": 4745.5, "profit": 805.5, "days_inactive": 136, "action": "Automated 15% Win-Back Email"}], "scatter_customers": [{"id": "CUST-0087", "x": 58, "y": 6691.25, "segment": "High Value"}, {"id": "CUST-0196", "x": 36, "y": 12291.7, "segment": "High Value"}, {"id": "CUST-0486", "x": 35, "y": 3622.2, "segment": "Regular"}, {"id": "CUST-0625", "x": 301, "y": 733.4, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0073", "x": 156, "y": 1930.2, "segment": "At Risk"}, {"id": "CUST-0598", "x": 24, "y": 7048.3, "segment": "High Value"}, {"id": "CUST-0235", "x": 21, "y": 12313.2, "segment": "High Value"}, {"id": "CUST-0567", "x": 120, "y": 32.0, "segment": "Regular"}, {"id": "CUST-0405", "x": 25, "y": 2694.6, "segment": "Regular"}, {"id": "CUST-0472", "x": 6, "y": 863.3, "segment": "Regular"}, {"id": "CUST-0169", "x": 115, "y": 3296.0, "segment": "Regular"}, {"id": "CUST-0307", "x": 30, "y": 6739.8, "segment": "High Value"}, {"id": "CUST-0618", "x": 25, "y": 530.0, "segment": "Regular"}, {"id": "CUST-0082", "x": 46, "y": 408.7, "segment": "Regular"}, {"id": "CUST-0266", "x": 148, "y": 2638.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0533", "x": 51, "y": 6487.75, "segment": "High Value"}, {"id": "CUST-0503", "x": 15, "y": 786.7, "segment": "Regular"}, {"id": "CUST-0301", "x": 185, "y": 835.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0070", "x": 25, "y": 4067.0, "segment": "Regular"}, {"id": "CUST-0011", "x": 15, "y": 8380.5, "segment": "High Value"}, {"id": "CUST-0252", "x": 30, "y": 3105.25, "segment": "Regular"}, {"id": "CUST-0064", "x": 21, "y": 2678.25, "segment": "Regular"}, {"id": "CUST-0464", "x": 13, "y": 18852.0, "segment": "High Value"}, {"id": "CUST-0055", "x": 1, "y": 14384.2, "segment": "High Value"}, {"id": "CUST-0535", "x": 3, "y": 14336.1, "segment": "High Value"}, {"id": "CUST-0283", "x": 1, "y": 2212.0, "segment": "Regular"}, {"id": "CUST-0530", "x": 28, "y": 3364.2, "segment": "Regular"}, {"id": "CUST-0102", "x": 10, "y": 1373.6, "segment": "Regular"}, {"id": "CUST-0119", "x": 17, "y": 6823.3, "segment": "High Value"}, {"id": "CUST-0032", "x": 20, "y": 6725.1, "segment": "High Value"}, {"id": "CUST-0286", "x": 28, "y": 2865.75, "segment": "Regular"}, {"id": "CUST-0056", "x": 2, "y": 3517.4, "segment": "Regular"}, {"id": "CUST-0344", "x": 7, "y": 3624.75, "segment": "Regular"}, {"id": "CUST-0269", "x": 100, "y": 2563.75, "segment": "Regular"}, {"id": "CUST-0551", "x": 2, "y": 1935.9, "segment": "Regular"}, {"id": "CUST-0180", "x": 38, "y": 16438.75, "segment": "High Value"}, {"id": "CUST-0109", "x": 358, "y": 373.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0430", "x": 7, "y": 6951.3, "segment": "High Value"}, {"id": "CUST-0212", "x": 26, "y": 2260.0, "segment": "Regular"}, {"id": "CUST-0111", "x": 2, "y": 10694.4, "segment": "High Value"}, {"id": "CUST-0165", "x": 106, "y": 1135.0, "segment": "Regular"}, {"id": "CUST-0289", "x": 228, "y": 3625.5, "segment": "At Risk"}, {"id": "CUST-0110", "x": 34, "y": 685.1, "segment": "Regular"}, {"id": "CUST-0077", "x": 30, "y": 1364.5, "segment": "Regular"}, {"id": "CUST-0508", "x": 6, "y": 4233.7, "segment": "Regular"}, {"id": "CUST-0003", "x": 202, "y": 3568.7, "segment": "At Risk"}, {"id": "CUST-0584", "x": 1, "y": 1119.6, "segment": "Regular"}, {"id": "CUST-0273", "x": 3, "y": 21945.3, "segment": "High Value"}, {"id": "CUST-0363", "x": 2, "y": 8323.8, "segment": "High Value"}, {"id": "CUST-0265", "x": 1, "y": 9515.45, "segment": "High Value"}, {"id": "CUST-0646", "x": 119, "y": 855.0, "segment": "Regular"}, {"id": "CUST-0303", "x": 21, "y": 2166.05, "segment": "Regular"}, {"id": "CUST-0178", "x": 53, "y": 5090.6, "segment": "Regular"}, {"id": "CUST-0147", "x": 3, "y": 7727.55, "segment": "High Value"}, {"id": "CUST-0031", "x": 7, "y": 467.5, "segment": "Regular"}, {"id": "CUST-0449", "x": 17, "y": 5670.5, "segment": "Regular"}, {"id": "CUST-0559", "x": 1, "y": 11604.75, "segment": "High Value"}, {"id": "CUST-0216", "x": 15, "y": 2863.2, "segment": "Regular"}, {"id": "CUST-0045", "x": 16, "y": 1888.0, "segment": "Regular"}, {"id": "CUST-0167", "x": 56, "y": 934.0, "segment": "Regular"}, {"id": "CUST-0079", "x": 24, "y": 14062.5, "segment": "High Value"}, {"id": "CUST-0185", "x": 183, "y": 1667.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0595", "x": 122, "y": 1144.4, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0224", "x": 412, "y": 790.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0609", "x": 14, "y": 19937.2, "segment": "High Value"}, {"id": "CUST-0282", "x": 26, "y": 12987.5, "segment": "High Value"}, {"id": "CUST-0352", "x": 109, "y": 1019.0, "segment": "Regular"}, {"id": "CUST-0435", "x": 265, "y": 4061.7, "segment": "At Risk"}, {"id": "CUST-0582", "x": 156, "y": 1167.1, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0638", "x": 185, "y": 2951.9, "segment": "At Risk"}, {"id": "CUST-0066", "x": 369, "y": 800.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0347", "x": 49, "y": 902.1, "segment": "Regular"}, {"id": "CUST-0050", "x": 23, "y": 4053.4, "segment": "Regular"}, {"id": "CUST-0261", "x": 325, "y": 3715.0, "segment": "At Risk"}, {"id": "CUST-0254", "x": 30, "y": 5646.0, "segment": "Regular"}, {"id": "CUST-0040", "x": 23, "y": 2284.0, "segment": "Regular"}, {"id": "CUST-0239", "x": 181, "y": 3121.6, "segment": "At Risk"}, {"id": "CUST-0369", "x": 40, "y": 3668.5, "segment": "Regular"}, {"id": "CUST-0007", "x": 20, "y": 6301.5, "segment": "High Value"}, {"id": "CUST-0439", "x": 52, "y": 4634.0, "segment": "Regular"}, {"id": "CUST-0091", "x": 40, "y": 4203.4, "segment": "Regular"}, {"id": "CUST-0497", "x": 17, "y": 2743.35, "segment": "Regular"}, {"id": "CUST-0608", "x": 6, "y": 1515.0, "segment": "Regular"}, {"id": "CUST-0462", "x": 31, "y": 4927.1, "segment": "Regular"}, {"id": "CUST-0418", "x": 8, "y": 7709.1, "segment": "High Value"}, {"id": "CUST-0637", "x": 13, "y": 13471.8, "segment": "High Value"}, {"id": "CUST-0157", "x": 2, "y": 16556.55, "segment": "High Value"}, {"id": "CUST-0556", "x": 415, "y": 1187.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0605", "x": 7, "y": 14671.85, "segment": "High Value"}, {"id": "CUST-0367", "x": 6, "y": 18887.25, "segment": "High Value"}, {"id": "CUST-0536", "x": 255, "y": 2991.3, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0042", "x": 4, "y": 3743.25, "segment": "Regular"}, {"id": "CUST-0438", "x": 16, "y": 1293.4, "segment": "Regular"}, {"id": "CUST-0432", "x": 158, "y": 739.2, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0057", "x": 53, "y": 2533.65, "segment": "Regular"}, {"id": "CUST-0575", "x": 29, "y": 3408.5, "segment": "Regular"}, {"id": "CUST-0133", "x": 11, "y": 900.2, "segment": "Regular"}, {"id": "CUST-0270", "x": 1, "y": 16829.0, "segment": "High Value"}, {"id": "CUST-0581", "x": 16, "y": 988.2, "segment": "Regular"}, {"id": "CUST-0647", "x": 0, "y": 12429.0, "segment": "High Value"}, {"id": "CUST-0025", "x": 29, "y": 1922.25, "segment": "Regular"}, {"id": "CUST-0231", "x": 20, "y": 4305.0, "segment": "Regular"}, {"id": "CUST-0132", "x": 15, "y": 3193.0, "segment": "Regular"}, {"id": "CUST-0501", "x": 16, "y": 11073.5, "segment": "High Value"}, {"id": "CUST-0446", "x": 212, "y": 1115.7, "segment": "At Risk"}, {"id": "CUST-0083", "x": 14, "y": 4887.6, "segment": "Regular"}, {"id": "CUST-0480", "x": 55, "y": 2775.1, "segment": "Regular"}, {"id": "CUST-0160", "x": 25, "y": 1710.2, "segment": "Regular"}, {"id": "CUST-0078", "x": 311, "y": 866.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0523", "x": 47, "y": 7781.5, "segment": "High Value"}, {"id": "CUST-0071", "x": 5, "y": 6193.05, "segment": "High Value"}, {"id": "CUST-0394", "x": 21, "y": 5584.05, "segment": "Regular"}, {"id": "CUST-0249", "x": 39, "y": 2328.1, "segment": "Regular"}, {"id": "CUST-0208", "x": 54, "y": 2246.0, "segment": "Regular"}, {"id": "CUST-0388", "x": 48, "y": 2773.2, "segment": "Regular"}, {"id": "CUST-0061", "x": 22, "y": 10342.8, "segment": "High Value"}, {"id": "CUST-0136", "x": 24, "y": 6063.7, "segment": "High Value"}, {"id": "CUST-0370", "x": 23, "y": 2791.15, "segment": "Regular"}, {"id": "CUST-0334", "x": 41, "y": 2858.5, "segment": "Regular"}, {"id": "CUST-0255", "x": 17, "y": 12840.4, "segment": "High Value"}, {"id": "CUST-0620", "x": 33, "y": 5505.2, "segment": "Regular"}, {"id": "CUST-0134", "x": 244, "y": 611.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0217", "x": 26, "y": 19421.8, "segment": "High Value"}, {"id": "CUST-0442", "x": 254, "y": 1126.85, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0376", "x": 26, "y": 9179.3, "segment": "High Value"}, {"id": "CUST-0181", "x": 38, "y": 1032.7, "segment": "Regular"}, {"id": "CUST-0525", "x": 1, "y": 2539.6, "segment": "Regular"}, {"id": "CUST-0518", "x": 55, "y": 1425.0, "segment": "Regular"}, {"id": "CUST-0333", "x": 404, "y": 1174.2, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0030", "x": 20, "y": 1208.9, "segment": "Regular"}, {"id": "CUST-0150", "x": 3, "y": 6852.35, "segment": "High Value"}, {"id": "CUST-0621", "x": 95, "y": 5702.8, "segment": "Regular"}, {"id": "CUST-0214", "x": 5, "y": 856.8, "segment": "Regular"}, {"id": "CUST-0304", "x": 42, "y": 6076.0, "segment": "High Value"}, {"id": "CUST-0381", "x": 17, "y": 4213.7, "segment": "Regular"}, {"id": "CUST-0323", "x": 102, "y": 6238.35, "segment": "High Value"}, {"id": "CUST-0325", "x": 11, "y": 9973.55, "segment": "High Value"}, {"id": "CUST-0490", "x": 49, "y": 4138.5, "segment": "Regular"}, {"id": "CUST-0291", "x": 30, "y": 2157.0, "segment": "Regular"}, {"id": "CUST-0606", "x": 19, "y": 3580.8, "segment": "Regular"}, {"id": "CUST-0580", "x": 58, "y": 682.5, "segment": "Regular"}, {"id": "CUST-0310", "x": 183, "y": 5115.0, "segment": "At Risk"}, {"id": "CUST-0610", "x": 19, "y": 5679.9, "segment": "Regular"}, {"id": "CUST-0316", "x": 30, "y": 4036.25, "segment": "Regular"}, {"id": "CUST-0613", "x": 50, "y": 1368.0, "segment": "Regular"}, {"id": "CUST-0305", "x": 727, "y": 12.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0240", "x": 59, "y": 227.0, "segment": "Regular"}, {"id": "CUST-0360", "x": 48, "y": 3651.25, "segment": "Regular"}, {"id": "CUST-0105", "x": 33, "y": 4553.75, "segment": "Regular"}, {"id": "CUST-0115", "x": 3, "y": 4011.5, "segment": "Regular"}, {"id": "CUST-0602", "x": 75, "y": 986.0, "segment": "Regular"}, {"id": "CUST-0331", "x": 9, "y": 1646.4, "segment": "Regular"}, {"id": "CUST-0008", "x": 163, "y": 8135.0, "segment": "At Risk"}, {"id": "CUST-0294", "x": 346, "y": 838.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0471", "x": 18, "y": 5166.9, "segment": "Regular"}, {"id": "CUST-0337", "x": 40, "y": 3315.0, "segment": "Regular"}, {"id": "CUST-0457", "x": 91, "y": 2131.75, "segment": "Regular"}, {"id": "CUST-0440", "x": 16, "y": 6888.9, "segment": "High Value"}, {"id": "CUST-0341", "x": 126, "y": 3887.0, "segment": "At Risk"}, {"id": "CUST-0366", "x": 69, "y": 1089.0, "segment": "Regular"}, {"id": "CUST-0141", "x": 6, "y": 11847.2, "segment": "High Value"}, {"id": "CUST-0215", "x": 4, "y": 13715.15, "segment": "High Value"}, {"id": "CUST-0044", "x": 38, "y": 4144.8, "segment": "Regular"}, {"id": "CUST-0043", "x": 28, "y": 9844.35, "segment": "High Value"}, {"id": "CUST-0074", "x": 0, "y": 5204.9, "segment": "Regular"}, {"id": "CUST-0332", "x": 21, "y": 12707.25, "segment": "High Value"}, {"id": "CUST-0565", "x": 45, "y": 5257.7, "segment": "Regular"}, {"id": "CUST-0067", "x": 30, "y": 2123.5, "segment": "Regular"}, {"id": "CUST-0012", "x": 5, "y": 9574.75, "segment": "High Value"}, {"id": "CUST-0437", "x": 10, "y": 7755.0, "segment": "High Value"}, {"id": "CUST-0564", "x": 48, "y": 1791.75, "segment": "Regular"}, {"id": "CUST-0315", "x": 39, "y": 2456.0, "segment": "Regular"}, {"id": "CUST-0631", "x": 39, "y": 2700.0, "segment": "Regular"}, {"id": "CUST-0262", "x": 394, "y": 1395.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0368", "x": 289, "y": 4215.4, "segment": "At Risk"}, {"id": "CUST-0242", "x": 44, "y": 11224.7, "segment": "High Value"}, {"id": "CUST-0387", "x": 197, "y": 2191.6, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0084", "x": 42, "y": 2288.35, "segment": "Regular"}, {"id": "CUST-0588", "x": 26, "y": 2060.25, "segment": "Regular"}, {"id": "CUST-0634", "x": 9, "y": 23330.65, "segment": "High Value"}, {"id": "CUST-0401", "x": 8, "y": 15295.95, "segment": "High Value"}, {"id": "CUST-0080", "x": 22, "y": 4493.55, "segment": "Regular"}, {"id": "CUST-0024", "x": 1, "y": 2924.25, "segment": "Regular"}, {"id": "CUST-0346", "x": 320, "y": 1114.75, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0338", "x": 24, "y": 17385.25, "segment": "High Value"}, {"id": "CUST-0222", "x": 17, "y": 8464.0, "segment": "High Value"}, {"id": "CUST-0238", "x": 60, "y": 3945.9, "segment": "Regular"}, {"id": "CUST-0326", "x": 8, "y": 8140.3, "segment": "High Value"}, {"id": "CUST-0489", "x": 28, "y": 1822.95, "segment": "Regular"}, {"id": "CUST-0443", "x": 55, "y": 609.75, "segment": "Regular"}, {"id": "CUST-0138", "x": 27, "y": 312.9, "segment": "Regular"}, {"id": "CUST-0579", "x": 301, "y": 933.6, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0494", "x": 3, "y": 18261.95, "segment": "High Value"}, {"id": "CUST-0203", "x": 11, "y": 4302.1, "segment": "Regular"}, {"id": "CUST-0213", "x": 8, "y": 3393.2, "segment": "Regular"}, {"id": "CUST-0010", "x": 0, "y": 7352.4, "segment": "High Value"}, {"id": "CUST-0604", "x": 11, "y": 593.6, "segment": "Regular"}, {"id": "CUST-0516", "x": 38, "y": 2459.0, "segment": "Regular"}, {"id": "CUST-0420", "x": 28, "y": 1416.45, "segment": "Regular"}, {"id": "CUST-0636", "x": 13, "y": 2721.7, "segment": "Regular"}, {"id": "CUST-0296", "x": 45, "y": 2139.45, "segment": "Regular"}, {"id": "CUST-0085", "x": 28, "y": 3896.5, "segment": "Regular"}, {"id": "CUST-0297", "x": 315, "y": 807.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0219", "x": 43, "y": 2242.35, "segment": "Regular"}, {"id": "CUST-0207", "x": 49, "y": 1395.0, "segment": "Regular"}, {"id": "CUST-0200", "x": 6, "y": 9793.75, "segment": "High Value"}, {"id": "CUST-0279", "x": 195, "y": 476.4, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0094", "x": 52, "y": 3130.25, "segment": "Regular"}, {"id": "CUST-0264", "x": 169, "y": 2785.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0225", "x": 38, "y": 2261.0, "segment": "Regular"}, {"id": "CUST-0593", "x": 378, "y": 1930.0, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0029", "x": 48, "y": 1046.2, "segment": "Regular"}, {"id": "CUST-0188", "x": 30, "y": 12843.1, "segment": "High Value"}, {"id": "CUST-0524", "x": 13, "y": 1280.75, "segment": "Regular"}, {"id": "CUST-0182", "x": 33, "y": 509.6, "segment": "Regular"}, {"id": "CUST-0427", "x": 133, "y": 9208.5, "segment": "At Risk"}, {"id": "CUST-0155", "x": 30, "y": 2616.1, "segment": "Regular"}, {"id": "CUST-0076", "x": 223, "y": 1285.3, "segment": "At Risk"}, {"id": "CUST-0359", "x": 218, "y": 3508.5, "segment": "At Risk"}, {"id": "CUST-0093", "x": 105, "y": 1840.25, "segment": "Regular"}, {"id": "CUST-0355", "x": 49, "y": 8132.0, "segment": "High Value"}, {"id": "CUST-0069", "x": 2, "y": 18785.65, "segment": "High Value"}, {"id": "CUST-0317", "x": 2, "y": 11309.4, "segment": "High Value"}, {"id": "CUST-0521", "x": 115, "y": 900.0, "segment": "Regular"}, {"id": "CUST-0192", "x": 23, "y": 1724.75, "segment": "Regular"}, {"id": "CUST-0016", "x": 189, "y": 902.8, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0373", "x": 17, "y": 9073.0, "segment": "High Value"}, {"id": "CUST-0614", "x": 32, "y": 3012.5, "segment": "Regular"}, {"id": "CUST-0089", "x": 20, "y": 2220.75, "segment": "Regular"}, {"id": "CUST-0546", "x": 60, "y": 4222.5, "segment": "Regular"}, {"id": "CUST-0118", "x": 6, "y": 3375.0, "segment": "Regular"}, {"id": "CUST-0458", "x": 39, "y": 2857.05, "segment": "Regular"}, {"id": "CUST-0487", "x": 142, "y": 3939.0, "segment": "At Risk"}, {"id": "CUST-0034", "x": 49, "y": 4602.4, "segment": "Regular"}, {"id": "CUST-0001", "x": 171, "y": 3565.0, "segment": "At Risk"}, {"id": "CUST-0643", "x": 17, "y": 582.5, "segment": "Regular"}, {"id": "CUST-0253", "x": 157, "y": 1519.15, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0413", "x": 99, "y": 2128.4, "segment": "Regular"}, {"id": "CUST-0557", "x": 9, "y": 3262.5, "segment": "Regular"}, {"id": "CUST-0591", "x": 84, "y": 221.5, "segment": "Regular"}, {"id": "CUST-0410", "x": 0, "y": 2415.25, "segment": "Regular"}, {"id": "CUST-0023", "x": 3, "y": 12661.05, "segment": "High Value"}, {"id": "CUST-0062", "x": 202, "y": 13356.35, "segment": "At Risk"}, {"id": "CUST-0117", "x": 9, "y": 6026.1, "segment": "High Value"}, {"id": "CUST-0454", "x": 68, "y": 2067.5, "segment": "Regular"}, {"id": "CUST-0232", "x": 10, "y": 5224.9, "segment": "Regular"}, {"id": "CUST-0090", "x": 16, "y": 6911.0, "segment": "High Value"}, {"id": "CUST-0186", "x": 55, "y": 8374.7, "segment": "High Value"}, {"id": "CUST-0276", "x": 143, "y": 2099.5, "segment": "Dormant / Low Engagement"}, {"id": "CUST-0495", "x": 17, "y": 2784.0, "segment": "Regular"}], "ai_insights": [{"title": "Regional Contraction in South Territory", "tag": "Geographic Demand Drag", "severity": "critical", "fact": "In H2 2024, South Region sales dropped by -19.53% (-$40,423.70 delta) and operating profit plunged by -43.85%. The primary contraction was driven by Technology hardware (-41.82%).", "explanation": "Competitor regional hub launch or elongated B2B procurement budget cycles in Southern IT centers. Fulfillment lead-time delays in local carrier networks.", "investigation": "Audit last 6 months of Southern B2B lost-deal notes and cross-reference on-time delivery rates with carrier logs.", "action": "Deploy targeted regional trade-in promotions for hardware and initiate executive outreach with top 25 southern accounts."}, {"title": "Severe Margin Destruction on Discounts >= 25%", "tag": "Pricing & Margin Leakage", "severity": "high", "fact": "Furniture operated at an overall margin of -2.46% (net loss of -$27,331.00). 100% of orders with discounts >= 25% operated at an outright negative operating profit.", "explanation": "Discretionary discounting permitted by sales reps to meet gross volume targets without visibility into thin wholesale base margins on conference tables.", "investigation": "Review CRM discount approval logs to isolate which sales reps and customer tiers consistently exceed 20% discount rates.", "action": "Enforce a strict 20% automated discount ceiling in the e-commerce checkout and align rep bonuses with gross margin dollars rather than revenue."}, {"title": "High-Value Account Dormancy (>120 Days Inactivity)", "tag": "Customer Retention Exposure", "severity": "warning", "fact": "41 mature accounts have surpassed the 120-day inactivity threshold (average dormancy: 215.6 days), placing $188,689.85 in proven historical revenue at risk of churn.", "explanation": "Lack of automated lifecycle notifications and absence of proactive account manager touchpoints following peak holiday ordering.", "investigation": "Scan helpdesk tickets for unresolved delivery or quality disputes among the 41 at-risk accounts.", "action": "Trigger automated Day-90 replenishment workflows and assign dedicated account executives to personally reach out to the top 10 dormant accounts."}], "ml_models": [{"name": "7-Day Naive Persistence", "type": "Baseline Benchmark", "mae": 3480.66, "rmse": 5335.03, "r2": -0.128, "description": "Assumes tomorrow's revenue equals sales from exactly 7 days prior. Used as standard naive benchmark."}, {"name": "Linear Regression", "type": "Parametric Baseline", "mae": 3005.65, "rmse": 4259.62, "r2": 0.281, "description": "Standard multiple linear regression on lag features and calendar signals."}, {"name": "Random Forest Regressor (Production)", "type": "Non-Linear Ensemble", "mae": 3113.27, "rmse": 4058.42, "r2": 0.347, "description": "100-tree ensemble with max_depth=8 and min_samples_leaf=3. Captures non-linear holiday spikes."}], "ml_features": [{"feature": "Sales_Rolling_7_Mean", "importance": 0.428, "description": "7-day backward moving average of daily revenue"}, {"feature": "Sales_Lag_7", "importance": 0.185, "description": "Exact sales revenue from 7 days ago (day-of-week seasonality)"}, {"feature": "Sales_Rolling_14_Mean", "importance": 0.142, "description": "14-day medium-term trend line"}, {"feature": "Sales_Lag_1", "importance": 0.089, "description": "Prior day's immediate sales momentum"}, {"feature": "Is_Q4_Holiday", "importance": 0.067, "description": "Binary indicator for high-volume Nov-Dec holiday shopping surge"}, {"feature": "Day_of_Week", "importance": 0.038, "description": "Weekly cyclical shopping patterns (Mon-Sun)"}, {"feature": "Sales_Rolling_7_Std", "importance": 0.027, "description": "7-day rolling revenue volatility"}, {"feature": "Month", "importance": 0.024, "description": "Annual seasonality progression (1-12)"}], "validation_tests": [{"name": "Raw Dataset Schema & Volume", "status": "PASSED", "details": "5,545 records verified with all 12 expected columns."}, {"name": "Clean Dataset Invariants", "status": "PASSED", "details": "Zero nulls, zero duplicates, all quantities >= 1, discounts strictly within [0.0, 1.0]."}, {"name": "Financial Calculation Integrity", "status": "PASSED", "details": "Revenue: $2,961,669.95, Profit: $423,672.35. Zero instances where Profit > Sales."}, {"name": "Customer Feature Store & Segmentation", "status": "PASSED", "details": "642 customers segmented across 5 cohorts with 100% financial reconciliation."}, {"name": "Machine Learning Model & Inference", "status": "PASSED", "details": "Random Forest deserialized successfully. Inference verified. Test MAE: $3113.27, R2: 0.347."}, {"name": "SQL Analytical Parity with Pandas", "status": "PASSED", "details": "100% exact numerical match across Revenue, Profit, and Order counts between SQL engine and Pandas."}, {"name": "Technical Reports Completeness", "status": "PASSED", "details": "All 6 markdown audit and intelligence reports verified on disk."}]};
+    window.DASHBOARD_DATA = {json.dumps(data_obj)};
   </script>
 
   <!-- External Data Overrides (if present) -->
@@ -1253,7 +1283,7 @@
        DASHBOARD SCRIPT WITH GRACEFUL CHART.JS & NATIVE CANVAS FALLBACK
        ======================================================================== -->
   <script>
-    function switchTab(tabId) {
+    function switchTab(tabId) {{
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
 
@@ -1266,40 +1296,40 @@
       if (activeBtn) activeBtn.classList.add('active');
 
       window.dispatchEvent(new Event('resize'));
-    }
+    }}
 
-    function openModal(src, caption) {
+    function openModal(src, caption) {{
       const modal = document.getElementById('chartModal');
       const img = document.getElementById('modalImg');
       const cap = document.getElementById('modalCaption');
       img.src = src;
       cap.textContent = caption;
       modal.classList.add('open');
-    }
-    function closeModal() {
+    }}
+    function closeModal() {{
       document.getElementById('chartModal').classList.remove('open');
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // MAIN INITIALIZATION
     // --------------------------------------------------------------------------
-    function initDashboard() {
+    function initDashboard() {{
       const data = window.DASHBOARD_DATA;
-      if (!data) {
+      if (!data) {{
         console.error("Dashboard data not loaded!");
         return;
-      }
+      }}
 
       // Populate Macro KPIs
-      if (data.kpis) {
-        document.getElementById('kpi-sales').textContent = '$' + Number(data.kpis.total_sales).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-        document.getElementById('kpi-profit').textContent = '$' + Number(data.kpis.total_profit).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      if (data.kpis) {{
+        document.getElementById('kpi-sales').textContent = '$' + Number(data.kpis.total_sales).toLocaleString('en-US', {{ minimumFractionDigits: 0, maximumFractionDigits: 0 }});
+        document.getElementById('kpi-profit').textContent = '$' + Number(data.kpis.total_profit).toLocaleString('en-US', {{ minimumFractionDigits: 0, maximumFractionDigits: 0 }});
         document.getElementById('kpi-margin').textContent = Number(data.kpis.margin).toFixed(2) + '% Margin';
         document.getElementById('kpi-aov').textContent = '$' + Number(data.kpis.aov).toFixed(2);
         document.getElementById('kpi-customers').textContent = Number(data.kpis.total_customers).toLocaleString();
         if (data.kpis.total_orders) document.getElementById('kpi-orders-pill').textContent = Number(data.kpis.total_orders).toLocaleString() + ' Orders';
         if (data.kpis.total_qty) document.getElementById('kpi-qty-pill').textContent = Number(data.kpis.total_qty).toLocaleString() + ' Units';
-      }
+      }}
 
       // Render Charts (Uses Chart.js if available, otherwise pure Canvas 2D fallback)
       renderAllCharts(data);
@@ -1311,42 +1341,42 @@
       renderMlSection(data.ml_models, data.ml_features);
       renderValidationTable(data.validation_tests);
       renderGallery();
-    }
+    }}
 
     // Check if DOM is ready
-    if (document.readyState === 'loading') {
+    if (document.readyState === 'loading') {{
       document.addEventListener('DOMContentLoaded', initDashboard);
-    } else {
+    }} else {{
       initDashboard();
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // CHART RENDERING (Chart.js or Native HTML5 Canvas Fallback)
     // --------------------------------------------------------------------------
-    function renderAllCharts(data) {
+    function renderAllCharts(data) {{
       const hasChartJs = typeof Chart !== 'undefined';
       
-      if (hasChartJs) {
+      if (hasChartJs) {{
         Chart.defaults.color = '#94a3b8';
         Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
         renderChartJsCharts(data);
-      } else {
+      }} else {{
         console.warn("Chart.js not loaded. Activating high-res native HTML5 Canvas fallback.");
         renderNativeCanvasCharts(data);
-      }
-    }
+      }}
+    }}
 
     // A. Chart.js Engine
-    function renderChartJsCharts(data) {
+    function renderChartJsCharts(data) {{
       // 1. Monthly Line Chart
       const ctxMonthly = document.getElementById('monthlyTrendChart');
-      if (ctxMonthly && data.monthly) {
-        new Chart(ctxMonthly, {
+      if (ctxMonthly && data.monthly) {{
+        new Chart(ctxMonthly, {{
           type: 'line',
-          data: {
+          data: {{
             labels: data.monthly.labels,
             datasets: [
-              {
+              {{
                 label: 'Sales Revenue ($)',
                 data: data.monthly.sales,
                 borderColor: '#06b6d4',
@@ -1355,8 +1385,8 @@
                 tension: 0.35,
                 borderWidth: 2.5,
                 pointRadius: 2.5
-              },
-              {
+              }},
+              {{
                 label: 'Net Profit ($)',
                 data: data.monthly.profit,
                 borderColor: '#10b981',
@@ -1365,137 +1395,137 @@
                 tension: 0.35,
                 borderWidth: 2.5,
                 pointRadius: 2.5
-              }
+              }}
             ]
-          },
-          options: {
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top' } },
-            scales: {
-              x: { grid: { color: 'rgba(255,255,255,0.04)' } },
-              y: { ticks: { callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.06)' } }
-            }
-          }
-        });
-      }
+            plugins: {{ legend: {{ position: 'top' }} }},
+            scales: {{
+              x: {{ grid: {{ color: 'rgba(255,255,255,0.04)' }} }},
+              y: {{ ticks: {{ callback: v => '$' + (v / 1000) + 'k' }}, grid: {{ color: 'rgba(255,255,255,0.06)' }} }}
+            }}
+          }}
+        }});
+      }}
 
       // 2. Regional Horizontal Bar
       const ctxReg = document.getElementById('regionalChart');
-      if (ctxReg && data.regional) {
-        new Chart(ctxReg, {
+      if (ctxReg && data.regional) {{
+        new Chart(ctxReg, {{
           type: 'bar',
-          data: {
+          data: {{
             labels: data.regional.labels,
             datasets: [
-              { label: 'Sales ($)', data: data.regional.sales, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 6 },
-              { label: 'Profit ($)', data: data.regional.profit, backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 6 }
+              {{ label: 'Sales ($)', data: data.regional.sales, backgroundColor: 'rgba(99, 102, 241, 0.85)', borderRadius: 6 }},
+              {{ label: 'Profit ($)', data: data.regional.profit, backgroundColor: 'rgba(16, 185, 129, 0.85)', borderRadius: 6 }}
             ]
-          },
-          options: {
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
             indexAxis: 'y',
-            plugins: { legend: { position: 'bottom' } },
-            scales: {
-              x: { ticks: { callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-              y: { grid: { display: false } }
-            }
-          }
-        });
-      }
+            plugins: {{ legend: {{ position: 'bottom' }} }},
+            scales: {{
+              x: {{ ticks: {{ callback: v => '$' + (v / 1000) + 'k' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }},
+              y: {{ grid: {{ display: false }} }}
+            }}
+          }}
+        }});
+      }}
 
       // 3. Category Bar Chart
       const ctxCat = document.getElementById('categoryChart');
-      if (ctxCat && data.category) {
-        new Chart(ctxCat, {
+      if (ctxCat && data.category) {{
+        new Chart(ctxCat, {{
           type: 'bar',
-          data: {
+          data: {{
             labels: data.category.labels,
-            datasets: [{ label: 'Revenue ($)', data: data.category.sales, backgroundColor: ['#6366f1', '#06b6d4', '#f59e0b'], borderRadius: 6 }]
-          },
-          options: {
+            datasets: [{{ label: 'Revenue ($)', data: data.category.sales, backgroundColor: ['#6366f1', '#06b6d4', '#f59e0b'], borderRadius: 6 }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { ticks: { callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
-      }
+            plugins: {{ legend: {{ display: false }} }},
+            scales: {{
+              y: {{ ticks: {{ callback: v => '$' + (v / 1000) + 'k' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }},
+              x: {{ grid: {{ display: false }} }}
+            }}
+          }}
+        }});
+      }}
 
       // 4. Payment Doughnut
       const ctxPay = document.getElementById('paymentChart');
-      if (ctxPay && data.payment) {
-        new Chart(ctxPay, {
+      if (ctxPay && data.payment) {{
+        new Chart(ctxPay, {{
           type: 'doughnut',
-          data: {
+          data: {{
             labels: data.payment.labels,
-            datasets: [{ data: data.payment.counts, backgroundColor: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#f43f5e'], borderColor: '#0f172a', borderWidth: 2 }]
-          },
-          options: {
+            datasets: [{{ data: data.payment.counts, backgroundColor: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#f43f5e'], borderColor: '#0f172a', borderWidth: 2 }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'right' } },
+            plugins: {{ legend: {{ position: 'right' }} }},
             cutout: '68%'
-          }
-        });
-      }
+          }}
+        }});
+      }}
 
       // 5. Customer Segments
       const ctxSeg = document.getElementById('customerSegmentChart');
-      if (ctxSeg && data.customer_segments) {
-        new Chart(ctxSeg, {
+      if (ctxSeg && data.customer_segments) {{
+        new Chart(ctxSeg, {{
           type: 'polarArea',
-          data: {
+          data: {{
             labels: data.customer_segments.labels,
-            datasets: [{ data: data.customer_segments.counts, backgroundColor: ['rgba(16,185,129,0.75)', 'rgba(99,102,241,0.75)', 'rgba(6,182,212,0.75)', 'rgba(244,63,94,0.75)', 'rgba(100,116,139,0.75)'], borderColor: '#0f172a' }]
-          },
-          options: {
+            datasets: [{{ data: data.customer_segments.counts, backgroundColor: ['rgba(16,185,129,0.75)', 'rgba(99,102,241,0.75)', 'rgba(6,182,212,0.75)', 'rgba(244,63,94,0.75)', 'rgba(100,116,139,0.75)'], borderColor: '#0f172a' }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'right' } },
-            scales: { r: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { display: false } } }
-          }
-        });
-      }
+            plugins: {{ legend: {{ position: 'right' }} }},
+            scales: {{ r: {{ grid: {{ color: 'rgba(255,255,255,0.06)' }}, ticks: {{ display: false }} }} }}
+          }}
+        }});
+      }}
 
       // 6. Scatter Chart
       const ctxScatter = document.getElementById('customerScatterChart');
-      if (ctxScatter && data.scatter_customers) {
-        new Chart(ctxScatter, {
+      if (ctxScatter && data.scatter_customers) {{
+        new Chart(ctxScatter, {{
           type: 'scatter',
-          data: {
-            datasets: [{
+          data: {{
+            datasets: [{{
               label: 'Customers',
-              data: data.scatter_customers.map(p => ({ x: p.x, y: p.y })),
+              data: data.scatter_customers.map(p => ({{ x: p.x, y: p.y }})),
               backgroundColor: 'rgba(6, 182, 212, 0.65)',
               pointRadius: 4
-            }]
-          },
-          options: {
+            }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              x: { title: { display: true, text: 'Days Inactive (Recency)', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-              y: { title: { display: true, text: 'Total Spending ($)', color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-            }
-          }
-        });
-      }
+            plugins: {{ legend: {{ display: false }} }},
+            scales: {{
+              x: {{ title: {{ display: true, text: 'Days Inactive (Recency)', color: '#94a3b8' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }},
+              y: {{ title: {{ display: true, text: 'Total Spending ($)', color: '#94a3b8' }}, grid: {{ color: 'rgba(255,255,255,0.05)' }} }}
+            }}
+          }}
+        }});
+      }}
 
       // 7. Discount Sensitivity
       const ctxDisc1 = document.getElementById('discountSensitivityChart');
       const ctxDisc2 = document.getElementById('discountProfitChart');
-      if (ctxDisc1 && ctxDisc2 && data.discount_sensitivity) {
-        new Chart(ctxDisc1, {
+      if (ctxDisc1 && ctxDisc2 && data.discount_sensitivity) {{
+        new Chart(ctxDisc1, {{
           type: 'line',
-          data: {
+          data: {{
             labels: data.discount_sensitivity.labels,
-            datasets: [{
+            datasets: [{{
               label: 'Loss Rate (% of orders losing money)',
               data: data.discount_sensitivity.loss_rate,
               borderColor: '#f43f5e',
@@ -1504,43 +1534,43 @@
               borderWidth: 3,
               pointRadius: 5,
               tension: 0.3
-            }]
-          },
-          options: {
+            }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } },
-            scales: {
-              y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.06)' } }
-            }
-          }
-        });
+            plugins: {{ legend: {{ position: 'bottom' }} }},
+            scales: {{
+              y: {{ min: 0, max: 100, ticks: {{ callback: v => v + '%' }}, grid: {{ color: 'rgba(255,255,255,0.06)' }} }}
+            }}
+          }}
+        }});
 
-        new Chart(ctxDisc2, {
+        new Chart(ctxDisc2, {{
           type: 'bar',
-          data: {
+          data: {{
             labels: data.discount_sensitivity.labels,
-            datasets: [{
+            datasets: [{{
               label: 'Realized Profit ($)',
               data: data.discount_sensitivity.total_profit,
               backgroundColor: data.discount_sensitivity.total_profit.map(v => v >= 0 ? '#10b981' : '#f43f5e'),
               borderRadius: 6
-            }]
-          },
-          options: {
+            }}]
+          }},
+          options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { ticks: { callback: v => '$' + (v / 1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.06)' } }
-            }
-          }
-        });
-      }
-    }
+            plugins: {{ legend: {{ display: false }} }},
+            scales: {{
+              y: {{ ticks: {{ callback: v => '$' + (v / 1000) + 'k' }}, grid: {{ color: 'rgba(255,255,255,0.06)' }} }}
+            }}
+          }}
+        }});
+      }}
+    }}
 
     // B. High-Fidelity Native Canvas 2D Fallback Engine (Guarantees charts render offline)
-    function renderNativeCanvasCharts(data) {
+    function renderNativeCanvasCharts(data) {{
       drawNativeLineChart('monthlyTrendChart', data.monthly.labels, data.monthly.sales, data.monthly.profit);
       drawNativeBarChart('regionalChart', data.regional.labels, data.regional.sales, data.regional.profit);
       drawNativeSingleBar('categoryChart', data.category.labels, data.category.sales, ['#6366f1', '#06b6d4', '#f59e0b']);
@@ -1549,18 +1579,18 @@
       drawNativeScatter('customerScatterChart', data.scatter_customers);
       drawNativeLossCurve('discountSensitivityChart', data.discount_sensitivity.labels, data.discount_sensitivity.loss_rate);
       drawNativeProfitBar('discountProfitChart', data.discount_sensitivity.labels, data.discount_sensitivity.total_profit);
-    }
+    }}
 
-    function setupCanvas(id) {
+    function setupCanvas(id) {{
       const c = document.getElementById(id);
       if (!c) return null;
       const rect = c.parentElement.getBoundingClientRect();
       c.width = rect.width || 600;
       c.height = rect.height || 300;
       return c.getContext('2d');
-    }
+    }}
 
-    function drawNativeLineChart(id, labels, series1, series2) {
+    function drawNativeLineChart(id, labels, series1, series2) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1572,35 +1602,35 @@
       // Grid lines
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
       ctx.lineWidth = 1;
-      for (let i = 0; i <= 4; i++) {
+      for (let i = 0; i <= 4; i++) {{
         const y = pad + (h - pad - bottomPad) * (i / 4);
         ctx.beginPath();
         ctx.moveTo(pad, y);
         ctx.lineTo(w - pad, y);
         ctx.stroke();
-      }
+      }}
 
       // Plot Series 1 (Sales)
       ctx.strokeStyle = '#06b6d4';
       ctx.lineWidth = 3;
       ctx.beginPath();
       const stepX = (w - pad * 2) / (labels.length - 1);
-      series1.forEach((val, i) => {
+      series1.forEach((val, i) => {{
         const x = pad + i * stepX;
         const y = h - bottomPad - ((val / maxVal) * (h - pad - bottomPad));
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      });
+      }});
       ctx.stroke();
 
       // Plot Series 2 (Profit)
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
-      series2.forEach((val, i) => {
+      series2.forEach((val, i) => {{
         const x = pad + i * stepX;
         const y = h - bottomPad - ((val / maxVal) * (h - pad - bottomPad));
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      });
+      }});
       ctx.stroke();
 
       // Legend
@@ -1614,9 +1644,9 @@
       ctx.fillRect(pad + 100, 10, 12, 12);
       ctx.fillStyle = '#cbd5e1';
       ctx.fillText('Profit ($)', pad + 118, 20);
-    }
+    }}
 
-    function drawNativeBarChart(id, labels, s1, s2) {
+    function drawNativeBarChart(id, labels, s1, s2) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1625,7 +1655,7 @@
       const barH = (h - 50) / labels.length;
 
       ctx.clearRect(0, 0, w, h);
-      labels.forEach((lab, i) => {
+      labels.forEach((lab, i) => {{
         const y = 30 + i * barH;
         ctx.fillStyle = '#94a3b8';
         ctx.font = '12px sans-serif';
@@ -1639,10 +1669,10 @@
 
         ctx.fillStyle = 'rgba(16, 185, 129, 0.85)';
         ctx.fillRect(pad, y + (barH / 2) + 2, w2, (barH / 2) - 4);
-      });
-    }
+      }});
+    }}
 
-    function drawNativeSingleBar(id, labels, values, colors) {
+    function drawNativeSingleBar(id, labels, values, colors) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1650,7 +1680,7 @@
       const barW = (w - pad * 2) / labels.length;
 
       ctx.clearRect(0, 0, w, h);
-      labels.forEach((lab, i) => {
+      labels.forEach((lab, i) => {{
         const bH = (values[i] / maxVal) * (h - 70);
         const x = pad + i * barW + 10;
         const y = h - 35 - bH;
@@ -1661,10 +1691,10 @@
         ctx.fillStyle = '#cbd5e1';
         ctx.font = '12px sans-serif';
         ctx.fillText(lab, x + 5, h - 15);
-      });
-    }
+      }});
+    }}
 
-    function drawNativeDoughnut(id, labels, values) {
+    function drawNativeDoughnut(id, labels, values) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1675,7 +1705,7 @@
       ctx.clearRect(0, 0, w, h);
       let startAngle = 0;
 
-      values.forEach((val, i) => {
+      values.forEach((val, i) => {{
         const slice = (val / total) * Math.PI * 2;
         ctx.beginPath();
         ctx.arc(cx, cy, radius, startAngle, startAngle + slice);
@@ -1692,10 +1722,10 @@
         ctx.fillText(labels[i], w * 0.68 + 16, legY + 9);
 
         startAngle += slice;
-      });
-    }
+      }});
+    }}
 
-    function drawNativeScatter(id, points) {
+    function drawNativeScatter(id, points) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1704,16 +1734,16 @@
 
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = 'rgba(6, 182, 212, 0.65)';
-      points.slice(0, 100).forEach(p => {
+      points.slice(0, 100).forEach(p => {{
         const x = pad + (p.x / maxX) * (w - pad * 2);
         const y = h - pad - (p.y / maxY) * (h - pad * 2);
         ctx.beginPath();
         ctx.arc(x, y, 3.5, 0, Math.PI * 2);
         ctx.fill();
-      });
-    }
+      }});
+    }}
 
-    function drawNativeLossCurve(id, labels, rates) {
+    function drawNativeLossCurve(id, labels, rates) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1724,15 +1754,15 @@
       ctx.lineWidth = 3;
       ctx.beginPath();
       const stepX = (w - pad * 2) / (labels.length - 1);
-      rates.forEach((rate, i) => {
+      rates.forEach((rate, i) => {{
         const x = pad + i * stepX;
         const y = h - pad - (rate / 100) * (h - pad * 2);
         if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      });
+      }});
       ctx.stroke();
 
       // Draw points
-      rates.forEach((rate, i) => {
+      rates.forEach((rate, i) => {{
         const x = pad + i * stepX;
         const y = h - pad - (rate / 100) * (h - pad * 2);
         ctx.fillStyle = '#f43f5e';
@@ -1742,10 +1772,10 @@
         ctx.fillStyle = '#fff';
         ctx.font = '10px sans-serif';
         ctx.fillText(rate + '%', x - 10, y - 8);
-      });
-    }
+      }});
+    }}
 
-    function drawNativeProfitBar(id, labels, profits) {
+    function drawNativeProfitBar(id, labels, profits) {{
       const ctx = setupCanvas(id);
       if (!ctx) return;
       const w = ctx.canvas.width, h = ctx.canvas.height;
@@ -1761,37 +1791,37 @@
       ctx.lineTo(w - pad, zeroY);
       ctx.stroke();
 
-      profits.forEach((val, i) => {
+      profits.forEach((val, i) => {{
         const x = pad + i * barW + 10;
         const bH = (Math.abs(val) / maxVal) * (h * 0.45);
         ctx.fillStyle = val >= 0 ? '#10b981' : '#f43f5e';
-        if (val >= 0) {
+        if (val >= 0) {{
           ctx.fillRect(x, zeroY - bH, barW - 20, bH);
-        } else {
+        }} else {{
           ctx.fillRect(x, zeroY, barW - 20, bH);
-        }
+        }}
         ctx.fillStyle = '#cbd5e1';
         ctx.font = '10px sans-serif';
         ctx.fillText(labels[i], x, h - 10);
-      });
-    }
+      }});
+    }}
 
     // --------------------------------------------------------------------------
     // RENDER GENAI STRATEGIC INSIGHTS
     // --------------------------------------------------------------------------
-    function renderAiInsights(insights) {
+    function renderAiInsights(insights) {{
       const container = document.getElementById('insights-container');
       if (!container || !insights) return;
 
       container.innerHTML = insights.map((item, idx) => `
-        <div class="insight-card ${item.severity}">
+        <div class="insight-card ${{item.severity}}">
           <div class="insight-header">
             <div class="insight-title-group">
-              <h3>Finding ${idx + 1}: ${item.title}</h3>
-              <span class="insight-tag">${item.tag}</span>
+              <h3>Finding ${{idx + 1}}: ${{item.title}}</h3>
+              <span class="insight-tag">${{item.tag}}</span>
             </div>
-            <span class="kpi-pill ${item.severity === 'critical' ? 'danger' : 'warn'}">
-              ${item.severity.toUpperCase()} PRIORITY
+            <span class="kpi-pill ${{item.severity === 'critical' ? 'danger' : 'warn'}}">
+              ${{item.severity.toUpperCase()}} PRIORITY
             </span>
           </div>
 
@@ -1801,7 +1831,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 Calculated Fact (Python/SQL)
               </div>
-              <p>${item.fact}</p>
+              <p>${{item.fact}}</p>
             </div>
 
             <div class="triad-box explanation">
@@ -1809,7 +1839,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                 Commercial Hypothesis
               </div>
-              <p>${item.explanation}</p>
+              <p>${{item.explanation}}</p>
             </div>
 
             <div class="triad-box investigation">
@@ -1817,7 +1847,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 Recommended Investigation
               </div>
-              <p>${item.investigation}</p>
+              <p>${{item.investigation}}</p>
             </div>
 
             <div class="triad-box action">
@@ -1825,38 +1855,38 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 Targeted Business Action
               </div>
-              <p>${item.action}</p>
+              <p>${{item.action}}</p>
             </div>
           </div>
         </div>
       `).join('');
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // AT-RISK TABLE & FILTER
     // --------------------------------------------------------------------------
     let allAtRiskCustomers = [];
 
-    function renderAtRiskCustomers(customers) {
+    function renderAtRiskCustomers(customers) {{
       allAtRiskCustomers = customers || [];
       const tbody = document.querySelector('#atRiskTable tbody');
       if (!tbody) return;
 
       tbody.innerHTML = allAtRiskCustomers.map(c => `
         <tr>
-          <td><span class="code-chip">${c.id}</span></td>
-          <td>${c.type}</td>
-          <td>${c.region}</td>
-          <td>${c.orders}</td>
-          <td style="font-weight:700; color:var(--accent-cyan);">$${Number(c.spend).toLocaleString()}</td>
-          <td style="color:${c.profit >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">$${Number(c.profit).toLocaleString()}</td>
-          <td><span style="color:var(--accent-rose); font-weight:700;">${c.days_inactive} days</span></td>
-          <td><span class="kpi-pill ${c.spend >= 6000 ? 'danger' : 'warn'}">${c.action}</span></td>
+          <td><span class="code-chip">${{c.id}}</span></td>
+          <td>${{c.type}}</td>
+          <td>${{c.region}}</td>
+          <td>${{c.orders}}</td>
+          <td style="font-weight:700; color:var(--accent-cyan);">$${{Number(c.spend).toLocaleString()}}</td>
+          <td style="color:${{c.profit >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'}};">$${{Number(c.profit).toLocaleString()}}</td>
+          <td><span style="color:var(--accent-rose); font-weight:700;">${{c.days_inactive}} days</span></td>
+          <td><span class="kpi-pill ${{c.spend >= 6000 ? 'danger' : 'warn'}}">${{c.action}}</span></td>
         </tr>
       `).join('');
-    }
+    }}
 
-    function filterCustomerTable() {
+    function filterCustomerTable() {{
       const q = document.getElementById('custSearchInput').value.toLowerCase();
       const filtered = allAtRiskCustomers.filter(c => 
         c.id.toLowerCase().includes(q) || 
@@ -1867,79 +1897,79 @@
       const tbody = document.querySelector('#atRiskTable tbody');
       tbody.innerHTML = filtered.map(c => `
         <tr>
-          <td><span class="code-chip">${c.id}</span></td>
-          <td>${c.type}</td>
-          <td>${c.region}</td>
-          <td>${c.orders}</td>
-          <td style="font-weight:700; color:var(--accent-cyan);">$${Number(c.spend).toLocaleString()}</td>
-          <td style="color:${c.profit >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">$${Number(c.profit).toLocaleString()}</td>
-          <td><span style="color:var(--accent-rose); font-weight:700;">${c.days_inactive} days</span></td>
-          <td><span class="kpi-pill ${c.spend >= 6000 ? 'danger' : 'warn'}">${c.action}</span></td>
+          <td><span class="code-chip">${{c.id}}</span></td>
+          <td>${{c.type}}</td>
+          <td>${{c.region}}</td>
+          <td>${{c.orders}}</td>
+          <td style="font-weight:700; color:var(--accent-cyan);">$${{Number(c.spend).toLocaleString()}}</td>
+          <td style="color:${{c.profit >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'}};">$${{Number(c.profit).toLocaleString()}}</td>
+          <td><span style="color:var(--accent-rose); font-weight:700;">${{c.days_inactive}} days</span></td>
+          <td><span class="kpi-pill ${{c.spend >= 6000 ? 'danger' : 'warn'}}">${{c.action}}</span></td>
         </tr>
       `).join('');
 
-      document.getElementById('atRiskSummaryText').textContent = `Showing ${filtered.length} matching accounts`;
-    }
+      document.getElementById('atRiskSummaryText').textContent = `Showing ${{filtered.length}} matching accounts`;
+    }}
 
     // --------------------------------------------------------------------------
     // RENDER TOP & BOTTOM PRODUCTS
     // --------------------------------------------------------------------------
-    function renderTopBottomProducts(top, bottom) {
+    function renderTopBottomProducts(top, bottom) {{
       const topTbody = document.querySelector('#topProductsTable tbody');
       const bottomTbody = document.querySelector('#bottomProductsTable tbody');
       if (!topTbody || !bottomTbody) return;
 
       topTbody.innerHTML = (top || []).slice(0, 5).map(p => `
         <tr>
-          <td><span class="code-chip">${p.id}</span></td>
-          <td>${p.category}</td>
-          <td>${p.units}</td>
-          <td style="font-weight:700;">$${Number(p.sales).toLocaleString()}</td>
-          <td style="color:var(--accent-emerald);">$${Number(p.profit).toLocaleString()}</td>
-          <td><span class="kpi-pill up">${p.margin}%</span></td>
+          <td><span class="code-chip">${{p.id}}</span></td>
+          <td>${{p.category}}</td>
+          <td>${{p.units}}</td>
+          <td style="font-weight:700;">$${{Number(p.sales).toLocaleString()}}</td>
+          <td style="color:var(--accent-emerald);">$${{Number(p.profit).toLocaleString()}}</td>
+          <td><span class="kpi-pill up">${{p.margin}}%</span></td>
         </tr>
       `).join('');
 
       bottomTbody.innerHTML = (bottom || []).slice(0, 5).map(p => `
         <tr>
-          <td><span class="code-chip">${p.id}</span></td>
-          <td>${p.category}</td>
-          <td>${p.units}</td>
-          <td style="font-weight:700;">$${Number(p.sales).toLocaleString()}</td>
-          <td style="color:var(--accent-rose);">$${Number(p.profit).toLocaleString()}</td>
-          <td><span class="kpi-pill danger">${p.margin}%</span></td>
+          <td><span class="code-chip">${{p.id}}</span></td>
+          <td>${{p.category}}</td>
+          <td>${{p.units}}</td>
+          <td style="font-weight:700;">$${{Number(p.sales).toLocaleString()}}</td>
+          <td style="color:var(--accent-rose);">$${{Number(p.profit).toLocaleString()}}</td>
+          <td><span class="kpi-pill danger">${{p.margin}}%</span></td>
         </tr>
       `).join('');
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // RENDER MACHINE LEARNING SECTION
     // --------------------------------------------------------------------------
-    function renderMlSection(models, features) {
+    function renderMlSection(models, features) {{
       const grid = document.getElementById('mlModelsGrid');
       const featList = document.getElementById('featureImportanceList');
       if (!grid || !featList) return;
 
       grid.innerHTML = (models || []).map(m => `
-        <div class="model-card ${m.name.includes('Random Forest') ? 'featured' : ''}">
+        <div class="model-card ${{m.name.includes('Random Forest') ? 'featured' : ''}}">
           <div class="model-title">
-            <span>${m.name}</span>
-            <span class="kpi-pill ${m.r2 > 0.3 ? 'up' : 'warn'}">${m.type}</span>
+            <span>${{m.name}}</span>
+            <span class="kpi-pill ${{m.r2 > 0.3 ? 'up' : 'warn'}}">${{m.type}}</span>
           </div>
-          <p style="font-size:0.75rem; color:var(--text-dim); margin-top:4px;">${m.description}</p>
+          <p style="font-size:0.75rem; color:var(--text-dim); margin-top:4px;">${{m.description}}</p>
           
           <div class="model-metrics">
             <div class="metric-item">
               <div class="label">Test MAE</div>
-              <div class="val">$${Number(m.mae).toFixed(2)}</div>
+              <div class="val">$${{Number(m.mae).toFixed(2)}}</div>
             </div>
             <div class="metric-item">
               <div class="label">Test RMSE</div>
-              <div class="val">$${Number(m.rmse).toFixed(2)}</div>
+              <div class="val">$${{Number(m.rmse).toFixed(2)}}</div>
             </div>
             <div class="metric-item">
               <div class="label">Holdout R²</div>
-              <div class="val" style="color:${m.r2 > 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${m.r2}</div>
+              <div class="val" style="color:${{m.r2 > 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'}};">${{m.r2}}</div>
             </div>
           </div>
         </div>
@@ -1948,65 +1978,79 @@
       featList.innerHTML = (features || []).map(f => `
         <div class="feature-bar-wrap">
           <div class="feature-bar-label">
-            <span style="font-family:var(--font-mono); color:var(--accent-cyan);">${f.feature}</span>
-            <span style="font-weight:700;">${(f.importance * 100).toFixed(1)}%</span>
+            <span style="font-family:var(--font-mono); color:var(--accent-cyan);">${{f.feature}}</span>
+            <span style="font-weight:700;">${{(f.importance * 100).toFixed(1)}}%</span>
           </div>
           <div class="progress-track">
-            <div class="progress-fill" style="width: ${f.importance * 100}%;"></div>
+            <div class="progress-fill" style="width: ${{f.importance * 100}}%;"></div>
           </div>
-          <div style="font-size:0.7rem; color:var(--text-dim); margin-top:2px;">${f.description}</div>
+          <div style="font-size:0.7rem; color:var(--text-dim); margin-top:2px;">${{f.description}}</div>
         </div>
       `).join('');
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // RENDER VALIDATION TABLE
     // --------------------------------------------------------------------------
-    function renderValidationTable(tests) {
+    function renderValidationTable(tests) {{
       const tbody = document.querySelector('#validationTable tbody');
       if (!tbody) return;
 
       tbody.innerHTML = (tests || []).map(t => `
         <tr>
-          <td style="font-weight:600; color:#fff;">${t.name}</td>
-          <td><span class="kpi-pill up">✓ ${t.status}</span></td>
-          <td style="color:var(--text-muted); font-size:0.8rem;">${t.details}</td>
+          <td style="font-weight:600; color:#fff;">${{t.name}}</td>
+          <td><span class="kpi-pill up">✓ ${{t.status}}</span></td>
+          <td style="color:var(--text-muted); font-size:0.8rem;">${{t.details}}</td>
         </tr>
       `).join('');
-    }
+    }}
 
     // --------------------------------------------------------------------------
     // RENDER GALLERY ITEMS
     // --------------------------------------------------------------------------
-    function renderGallery() {
+    function renderGallery() {{
       const gallery = document.getElementById('chartGalleryGrid');
       if (!gallery) return;
 
       const charts = [
-        { file: "reports/charts/monthly_sales_trend.png", title: "Monthly Sales Turnover Trend" },
-        { file: "reports/charts/monthly_profit_trend.png", title: "Monthly Net Operating Profit Trend" },
-        { file: "reports/charts/sales_by_region.png", title: "Sales Revenue by Region" },
-        { file: "reports/charts/profit_by_region.png", title: "Operating Profit by Region" },
-        { file: "reports/charts/sales_by_category.png", title: "Sales & Margins by Product Category" },
-        { file: "reports/charts/customer_segments.png", title: "Customer RFM Cohort Breakdown" },
-        { file: "reports/charts/recency_vs_spending.png", title: "Customer Inactivity vs Total Spending" },
-        { file: "reports/charts/discount_vs_profit.png", title: "Discount % vs Net Operating Profit" },
-        { file: "reports/charts/top_10_products.png", title: "Top 10 High-Revenue Generating Products" },
-        { file: "reports/charts/ml_actual_vs_predicted.png", title: "Random Forest: Actual vs Predicted Revenue" },
-        { file: "reports/charts/ml_feature_importance.png", title: "Random Forest Gini Feature Importance" },
-        { file: "reports/charts/customer_spending_distribution.png", title: "Customer Lifetime Spend Distribution" }
+        {{ file: "reports/charts/monthly_sales_trend.png", title: "Monthly Sales Turnover Trend" }},
+        {{ file: "reports/charts/monthly_profit_trend.png", title: "Monthly Net Operating Profit Trend" }},
+        {{ file: "reports/charts/sales_by_region.png", title: "Sales Revenue by Region" }},
+        {{ file: "reports/charts/profit_by_region.png", title: "Operating Profit by Region" }},
+        {{ file: "reports/charts/sales_by_category.png", title: "Sales & Margins by Product Category" }},
+        {{ file: "reports/charts/customer_segments.png", title: "Customer RFM Cohort Breakdown" }},
+        {{ file: "reports/charts/recency_vs_spending.png", title: "Customer Inactivity vs Total Spending" }},
+        {{ file: "reports/charts/discount_vs_profit.png", title: "Discount % vs Net Operating Profit" }},
+        {{ file: "reports/charts/top_10_products.png", title: "Top 10 High-Revenue Generating Products" }},
+        {{ file: "reports/charts/ml_actual_vs_predicted.png", title: "Random Forest: Actual vs Predicted Revenue" }},
+        {{ file: "reports/charts/ml_feature_importance.png", title: "Random Forest Gini Feature Importance" }},
+        {{ file: "reports/charts/customer_spending_distribution.png", title: "Customer Lifetime Spend Distribution" }}
       ];
 
       gallery.innerHTML = charts.map(c => `
-        <div class="gallery-item" onclick="openModal('${c.file}', '${c.title}')">
-          <img src="${c.file}" alt="${c.title}" onerror="this.src='https://placehold.co/600x400/111827/06b6d4?text=Chart+Preview'" />
+        <div class="gallery-item" onclick="openModal('${{c.file}}', '${{c.title}}')">
+          <img src="${{c.file}}" alt="${{c.title}}" onerror="this.src='https://placehold.co/600x400/111827/06b6d4?text=Chart+Preview'" />
           <div class="gallery-item-caption">
-            <h4>${c.title}</h4>
+            <h4>${{c.title}}</h4>
             <p>Click to zoom full resolution</p>
           </div>
         </div>
       `).join('');
-    }
+    }}
   </script>
 </body>
 </html>
+"""
+
+    # Write to root index.html
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html_template)
+    print("Successfully built index.html")
+
+    # Write to dashboard/index.html
+    with open("dashboard/index.html", "w", encoding="utf-8") as f:
+        f.write(html_template)
+    print("Successfully built dashboard/index.html")
+
+if __name__ == "__main__":
+    build_dashboard()
