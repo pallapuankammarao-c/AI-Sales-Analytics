@@ -2,6 +2,7 @@
 
 A production-grade, end-to-end Data Analytics, Machine Learning, and Generative AI portfolio project built for commercial retail intelligence.
 
+[![Live Web Dashboard](https://img.shields.io/badge/Live_Dashboard-Open_Results_Webpage-6366f1.svg?style=for-the-badge&logo=googlechrome&logoColor=white)](https://pallapuankammarao-c.github.io/AI-Sales-Analytics/)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-2.3+-150458.svg)](https://pandas.pydata.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1.svg)](https://www.mysql.com/)
@@ -9,6 +10,11 @@ A production-grade, end-to-end Data Analytics, Machine Learning, and Generative 
 [![Power BI](https://img.shields.io/badge/Power_BI-Desktop-F2C811.svg)](https://powerbi.microsoft.com/)
 [![Generative AI](https://img.shields.io/badge/GenAI-Grounded_Analytics-9cf.svg)](ai/ai_insights.py)
 [![Tests](https://img.shields.io/badge/Automated_Tests-100%25_Passing-brightgreen.svg)](tests/test_project_validation.py)
+
+> ### 🌐 [👉 Click Here to Open Live Interactive Web Analytics Dashboard](https://pallapuankammarao-c.github.io/AI-Sales-Analytics/)
+> **Live Results & Executive Portal:** Explore macro financial KPIs ($2.96M Revenue / $423K Profit), interactive 24-month trends, customer RFM risk tables, ML forecast benchmarks, and grounded GenAI strategic findings directly in your browser.
+> 
+> *Direct repository file: [index.html](index.html) &bull; [Alternative HTMLPreview Direct Link](https://htmlpreview.github.io/?https://github.com/pallapuankammarao-c/AI-Sales-Analytics/blob/main/index.html)*
 
 ---
 
@@ -309,6 +315,11 @@ python ai/ai_insights.py
 
 # 8. Run automated end-to-end project validation test suite
 python tests/test_project_validation.py
+
+# 9. View Interactive Executive Web Dashboard
+# Simply open index.html directly in any browser, or run:
+python -m http.server 8000
+# Open http://localhost:8000 in your browser
 ```
 
 ---
