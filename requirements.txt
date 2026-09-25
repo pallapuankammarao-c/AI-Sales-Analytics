@@ -1,0 +1,15 @@
+# Core Data Manipulation & Mathematics
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Statistical Modeling & Machine Learning
+scikit-learn>=1.5.0
+joblib>=1.4.0
+threadpoolctl>=3.5.0
+
+# Publication Data Visualization
+matplotlib>=3.9.0
+
+# Environment Configuration & Utilities
+python-dotenv>=1.0.0
+six>=1.16.0

@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Private Credentials
+.env
+*.local
+*.key
+*.pem
+
+# Machine Learning Large Artifacts
+# Note: models/sales_prediction_model.pkl is small (< 1 MB) and tracked for portfolio demo.
+# Uncomment the line below if you wish to exclude trained model binaries:
+# models/*.pkl
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# IDE & Editor Configuration
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
